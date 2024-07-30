@@ -1,0 +1,10 @@
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/repository/PaymentRepository.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/service/IyzicoPaymentService.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/service/BankService.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/service/BankPaymentResponse.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/configuration/DatabaseConfiguration.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/entity/Payment.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/service/BankPaymentRequest.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/Application.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/configuration/MessageConfig.java
+/Users/furkanilhan/Downloads/iyzico-challenge/src/main/java/com/iyzico/challenge/service/PaymentServiceClients.java
