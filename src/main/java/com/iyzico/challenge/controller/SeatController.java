@@ -46,5 +46,12 @@ public class SeatController {
     public ResponseEntity<SeatDTO> updateSeatAvailability(@PathVariable Long id, @RequestParam boolean availability) {
         return ResponseEntity.ok(seatService.updateSeatAvailability(id, availability));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SeatDTO> updateSeat(@PathVariable Long id, @RequestBody SeatDTO seatDTO) {
+        return seatService.updateSeat(id, seatDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
 

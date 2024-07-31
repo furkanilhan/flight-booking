@@ -24,6 +24,13 @@ public class FlightController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFlight);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<FlightDTO> updateFlight(@PathVariable Long id, @RequestBody FlightDTO flightDTO) {
+        return flightService.updateFlight(id, flightDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFlight(@PathVariable Long id) {
         flightService.deleteFlight(id);

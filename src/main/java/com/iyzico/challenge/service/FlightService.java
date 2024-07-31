@@ -29,6 +29,15 @@ public class FlightService {
         return flightMapper.toFlightDTO(savedFlight);
     }
 
+    public Optional<FlightDTO> updateFlight(Long id, FlightDTO flightDTO) {
+        return flightRepository.findById(id).map(existingFlight -> {
+            existingFlight.setName(flightDTO.getName());
+            existingFlight.setDescription(flightDTO.getDescription());
+            Flight updatedFlight = flightRepository.save(existingFlight);
+            return flightMapper.toFlightDTO(updatedFlight);
+        });
+    }
+
     public void deleteFlight(Long flightId) {
         flightRepository.deleteById(flightId);
     }

@@ -5,6 +5,7 @@ import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.mapper.SeatMapper;
 import com.iyzico.challenge.repository.SeatRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,18 @@ public class SeatService {
         seat.setAvailable(availability);
         Seat updatedSeat = seatRepository.save(seat);
         return seatMapper.toSeatDTO(updatedSeat);
+    }
+
+    @Transactional
+    public Optional<SeatDTO> updateSeat(Long seatId, SeatDTO seatDTO) {
+        return seatRepository.findById(seatId).map(existingSeat -> {
+            existingSeat.setSeatNumber(seatDTO.getSeatNumber());
+            existingSeat.setAvailable(seatDTO.isAvailable());
+            existingSeat.setPrice(seatDTO.getPrice());
+            existingSeat.setFlight(seatMapper.toSeat(seatDTO).getFlight());
+            Seat updatedSeat = seatRepository.save(existingSeat);
+            return seatMapper.toSeatDTO(updatedSeat);
+        });
     }
 }
 
