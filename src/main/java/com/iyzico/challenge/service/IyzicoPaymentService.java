@@ -15,15 +15,15 @@ public class IyzicoPaymentService {
 
     private Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
 
-    private BankService bankService;
-    private PaymentRepository paymentRepository;
+    private final BankService bankService;
+    private final PaymentRepository paymentRepository;
 
     public IyzicoPaymentService(BankService bankService, PaymentRepository paymentRepository) {
         this.bankService = bankService;
         this.paymentRepository = paymentRepository;
     }
 
-    public void pay(BigDecimal price) {
+    public String pay(BigDecimal price) {
         //pay with bank
         BankPaymentRequest request = new BankPaymentRequest();
         request.setPrice(price);
@@ -34,6 +34,8 @@ public class IyzicoPaymentService {
         payment.setBankResponse(response.getResultCode());
         payment.setPrice(price);
         paymentRepository.save(payment);
+
         logger.info("Payment saved successfully!");
+        return "Payment successful";
     }
 }
