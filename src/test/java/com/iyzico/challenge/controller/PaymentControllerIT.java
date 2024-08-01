@@ -1,10 +1,11 @@
-package com.iyzico.challenge.service;
+package com.iyzico.challenge.controller;
 
 import com.iyzico.challenge.entity.Flight;
 import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.enums.SeatStatus;
 import com.iyzico.challenge.repository.FlightRepository;
 import com.iyzico.challenge.repository.SeatRepository;
+import com.iyzico.challenge.service.PaymentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class IyzicoPaymentServiceIT {
+public class PaymentControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
