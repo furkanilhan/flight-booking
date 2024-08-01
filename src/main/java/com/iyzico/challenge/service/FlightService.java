@@ -2,8 +2,10 @@ package com.iyzico.challenge.service;
 
 import com.iyzico.challenge.dto.FlightDTO;
 import com.iyzico.challenge.entity.Flight;
+import com.iyzico.challenge.exception.CustomException;
 import com.iyzico.challenge.mapper.FlightMapper;
 import com.iyzico.challenge.repository.FlightRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,22 +26,34 @@ public class FlightService {
     }
 
     public FlightDTO saveFlight(FlightDTO flightDTO) {
-        Flight flight = flightMapper.toFlight(flightDTO);
-        Flight savedFlight = flightRepository.save(flight);
-        return flightMapper.toFlightDTO(savedFlight);
+        try {
+            Flight flight = flightMapper.toFlight(flightDTO);
+            Flight savedFlight = flightRepository.save(flight);
+            return flightMapper.toFlightDTO(savedFlight);
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save flight!");
+        }
     }
 
     public Optional<FlightDTO> updateFlight(Long id, FlightDTO flightDTO) {
-        return flightRepository.findById(id).map(existingFlight -> {
-            existingFlight.setName(flightDTO.getName());
-            existingFlight.setDescription(flightDTO.getDescription());
-            Flight updatedFlight = flightRepository.save(existingFlight);
-            return flightMapper.toFlightDTO(updatedFlight);
-        });
+        try {
+            return flightRepository.findById(id).map(existingFlight -> {
+                existingFlight.setName(flightDTO.getName());
+                existingFlight.setDescription(flightDTO.getDescription());
+                Flight updatedFlight = flightRepository.save(existingFlight);
+                return flightMapper.toFlightDTO(updatedFlight);
+            });
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to save flight!");
+        }
     }
 
     public void deleteFlight(Long flightId) {
-        flightRepository.deleteById(flightId);
+        try {
+            flightRepository.deleteById(flightId);
+        } catch (Exception ex) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete flight!");
+        }
     }
 
     public List<FlightDTO> getAllFlights() {
