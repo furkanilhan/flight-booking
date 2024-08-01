@@ -24,6 +24,7 @@ public class SeatService {
         this.seatMapper = seatMapper;
     }
 
+    @Transactional
     public SeatDTO saveSeat(SeatDTO seatDTO) {
         try {
             Seat seat = seatMapper.toSeat(seatDTO);
@@ -34,6 +35,7 @@ public class SeatService {
         }
     }
 
+    @Transactional
     public void deleteSeat(Long seatId) {
         try {
             seatRepository.deleteById(seatId);
@@ -58,6 +60,7 @@ public class SeatService {
         return seatRepository.findById(seatId).map(seatMapper::toSeatDTO);
     }
 
+    @Transactional
     public SeatDTO updateSeatAvailability(Long seatId, boolean availability) {
         Seat seat = seatRepository.findById(seatId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Seat not found"));

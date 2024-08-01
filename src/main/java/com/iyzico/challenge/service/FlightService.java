@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class FlightService {
 
     private final FlightRepository flightRepository;
@@ -25,6 +24,7 @@ public class FlightService {
         this.flightMapper = flightMapper;
     }
 
+    @Transactional
     public FlightDTO saveFlight(FlightDTO flightDTO) {
         try {
             Flight flight = flightMapper.toFlight(flightDTO);
@@ -35,6 +35,7 @@ public class FlightService {
         }
     }
 
+    @Transactional
     public Optional<FlightDTO> updateFlight(Long id, FlightDTO flightDTO) {
         try {
             return flightRepository.findById(id).map(existingFlight -> {
@@ -48,6 +49,7 @@ public class FlightService {
         }
     }
 
+    @Transactional
     public void deleteFlight(Long flightId) {
         try {
             flightRepository.deleteById(flightId);
