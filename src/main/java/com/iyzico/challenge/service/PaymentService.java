@@ -2,7 +2,9 @@ package com.iyzico.challenge.service;
 
 import com.iyzico.challenge.entity.Seat;
 import com.iyzico.challenge.enums.SeatStatus;
+import com.iyzico.challenge.exception.CustomException;
 import com.iyzico.challenge.repository.SeatRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,27 +21,19 @@ public class PaymentService {
     }
 
     @Transactional
-    public String processPayment(Long seatId) {
+    public void processPayment(Long seatId) {
         try {
-            Seat seat = seatRepository.findByIdWithLock(seatId).orElseThrow(() -> new RuntimeException("Seat not found"));
+            Seat seat = seatRepository.findByIdWithLock(seatId).orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "Seat not found"));
             if (seat.getStatus() == SeatStatus.AVAILABLE) {
                 seat.setStatus(SeatStatus.BOOKED);
                 seatRepository.save(seat);
 
-                String paymentResult = iyzicoPaymentService.pay(seat.getPrice());
-
-                if ("Payment successful".equals(paymentResult)) {
-                    return "Payment successful";
-                } else {
-                    seat.setStatus(SeatStatus.AVAILABLE);
-                    seatRepository.save(seat);
-                    return paymentResult;
-                }
+                iyzicoPaymentService.pay(seat.getPrice());
             } else {
-                return "Seat is already booked!";
+                throw new CustomException( HttpStatus.BAD_REQUEST, "Seat is already booked!");
             }
         } catch (ObjectOptimisticLockingFailureException e) {
-            return "Seat is already sold";
+            throw new CustomException(HttpStatus.CONFLICT, "Seat is already sold");
         }
     }
 }

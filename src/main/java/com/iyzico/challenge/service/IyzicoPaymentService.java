@@ -1,64 +1,38 @@
 package com.iyzico.challenge.service;
 
-import com.iyzico.challenge.entity.Payment;
-import com.iyzico.challenge.worker.PaymentWorker;
+import com.iyzico.challenge.exception.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.*;
 
 @Service
 public class IyzicoPaymentService {
-    private static final Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
 
-    private final BlockingQueue<Payment> paymentQueue;
-    private final BankService bankService;
-    private final ExecutorService executorService;
-    private final AtomicBoolean running;
+    private final Logger logger = LoggerFactory.getLogger(IyzicoPaymentService.class);
 
-    @Autowired
-    public IyzicoPaymentService(BankService bankService, ApplicationContext context) {
-        this.bankService = bankService;
-        this.paymentQueue = new LinkedBlockingQueue<>();
-        this.executorService = Executors.newFixedThreadPool(2);
-        this.running = new AtomicBoolean(true);
+    private final PaymentProcessor paymentProcessor;
+    private final Semaphore semaphore;
 
-        for (int i = 0; i < 2; i++) {
-            PaymentWorker paymentWorker = context.getBean(PaymentWorker.class, paymentQueue, context.getBean(PaymentWorkerService.class), running);
-            executorService.execute(paymentWorker);
-        }
+    public IyzicoPaymentService(PaymentProcessor paymentProcessor) {
+        this.paymentProcessor = paymentProcessor;
+        // this can be calculated based on db configuration if made public
+        this.semaphore = new Semaphore(2);
     }
 
-    public String pay(BigDecimal price) {
-        BankPaymentRequest request = new BankPaymentRequest();
-        request.setPrice(price);
-        BankPaymentResponse response = bankService.pay(request);
-
-        Payment payment = new Payment();
-        payment.setBankResponse(response.getResultCode());
-        payment.setPrice(price);
+    public void pay(BigDecimal price) {
         try {
-            paymentQueue.put(payment);
-            logger.info("Payment enqueued successfully!");
-            return "Payment successful";
+            semaphore.acquire();
+            paymentProcessor.submit(price);
         } catch (InterruptedException e) {
+            logger.error("Error occurred while acquiring semaphore", e);
             Thread.currentThread().interrupt();
-            logger.error("Failed to enqueue payment", e);
-            return "Failed to enqueue payment";
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "Payment processing error");
+        } finally {
+            semaphore.release();
         }
-    }
-
-    public void shutdown() {
-        running.set(false);
-        executorService.shutdown();
-        logger.info("Payment service is shutting down.");
     }
 }
