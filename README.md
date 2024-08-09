@@ -1,7 +1,5 @@
 # flight booking coding challenge
 
-
-We expect you to complete a coding challenge in order for us to understand your coding skills. 
 The challenge is a Java11 + Spring Boot project which uses H2 as the database.
 
 
