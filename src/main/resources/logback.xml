@@ -7,7 +7,7 @@
 
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.hibernate" level="INFO"/>
-    <logger name="com.iyzico.challenge" level="DEBUG"/>
+    <logger name="com.furkan.booking" level="DEBUG"/>
 
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>

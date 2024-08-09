@@ -4,16 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.iyzico</groupId>
-    <artifactId>iyzico-challenge</artifactId>
+    <groupId>com.furkan</groupId>
+    <artifactId>booking</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
-
-    <organization>
-        <name>iyzico</name>
-        <url>https://iyzico.com</url>
-    </organization>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -3,5 +3,5 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.hibernate" level="INFO"/>
-    <logger name="com.iyzico.challenge" level="DEBUG"/>
+    <logger name="com.furkan.booking" level="DEBUG"/>
 </configuration>
